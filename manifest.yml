@@ -1,0 +1,19 @@
+---
+# manifest.yml — IBM Cloud Foundry deployment manifest
+# Deploy with:  ibmcloud cf push
+# Docs: https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html
+applications:
+  - name: heart-attack-prediction-api
+    memory: 512M
+    disk_quota: 1G
+    instances: 1
+    buildpacks:
+      - python_buildpack
+    command: >
+      python train.py &&
+      uvicorn app:app --host 0.0.0.0 --port $PORT --workers 2
+    health-check-type: http
+    health-check-http-endpoint: /
+    env:
+      PYTHONUNBUFFERED: "1"
+      PYTHONPATH: .
